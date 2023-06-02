@@ -142,32 +142,6 @@ class _OrganisationHistoryState extends State<OrganisationHistory> {
       ),
     );
   }
-
-  String? calculatePrice(int quantity, String type, DocumentSnapshot item) {
-    if (type == 'Kitchen Waste') {
-      return (quantity *
-              int.parse(item['organisation_detail']['price']['Kitchen_waste']))
-          .toString();
-    } else if (type == 'Plastic') {
-      return (quantity *
-              int.parse(item['organisation_detail']['price']['Plastic']))
-          .toString();
-    } else if (type == 'Paper') {
-      return (quantity *
-              int.parse(item['organisation_detail']['price']['Paper']))
-          .toString();
-    } else if (type == 'Metal') {
-      return (quantity *
-              int.parse(item['organisation_detail']['price']['Metal']))
-          .toString();
-    } else if (type == 'Glass') {
-      return (quantity *
-              int.parse(item['organisation_detail']['price']['Glass']))
-          .toString();
-    } else {
-      return null;
-    }
-  }
 }
 
 class HistoryItem {

@@ -21,6 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController _locationController = TextEditingController();
   String _selectedImagePath = '';
   late Future initUserDetail;
+  Map<String, dynamic>? userData = {};
   Auth authService = Auth();
   UserService firebaseUser = UserService();
   bool imageUploading = false;
@@ -81,150 +82,269 @@ class _ProfilePageState extends State<ProfilePage> {
             key: _formKey,
             child: Column(
               children: [
-                FutureBuilder(
-                  future: initUserDetail,
-                  builder: (BuildContext context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasError) {
-                      return customSnackBar(
-                          context: context, content: "Something went wrong");
-                    }
+                if (userData == null)
+                  FutureBuilder(
+                    future: initUserDetail,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasError) {
+                        return customSnackBar(
+                            context: context, content: "Something went wrong");
+                      }
 
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      Map<String, dynamic> data =
-                          snapshot.data!.data() as Map<String, dynamic>;
-                      List<String> name =
-                          data['name'].toString().split(' ').toList();
-                      print(name.toList());
-                      _firstNameController.text = name[0];
-                      _lastNameController.text = name[1];
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        Map<String, dynamic> data =
+                            snapshot.data!.data() as Map<String, dynamic>;
+                        userData = data;
+                        List<String> name =
+                            data['name'].toString().split(' ').toList();
+                        print(name.toList());
+                        _firstNameController.text = name[0];
+                        _lastNameController.text = name[1];
 
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: _selectImage,
-                            child: Container(
-                                width: 100,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 1.0,
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: _selectImage,
+                              child: Container(
+                                  width: 100,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                      width: 1.0,
+                                    ),
+                                    image: imageUploading == true &&
+                                            _selectedImagePath.isNotEmpty
+                                        ? DecorationImage(
+                                            image: FileImage(
+                                              File(_selectedImagePath),
+                                            ),
+                                            fit: BoxFit.cover,
+                                          )
+                                        : data['image'].toString().isNotEmpty
+                                            ? DecorationImage(
+                                                image: NetworkImage(
+                                                    data['image'].toString()))
+                                            : null,
                                   ),
-                                  image: imageUploading == true &&
-                                          _selectedImagePath.isNotEmpty
-                                      ? DecorationImage(
-                                          image: FileImage(
-                                            File(_selectedImagePath),
-                                          ),
-                                          fit: BoxFit.cover,
-                                        )
-                                      : data['image'].toString().isNotEmpty
-                                          ? DecorationImage(
-                                              image: NetworkImage(
-                                                  data['image'].toString()))
-                                          : null,
-                                ),
-                                alignment: Alignment.bottomRight,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 8, right: 4),
-                                  child: Icon(Icons.add_a_photo),
-                                )),
-                          ),
-                          SizedBox(height: 30),
-                          TextFormField(
-                            controller: _firstNameController,
-                            validator: (value) {
-                              return checkNullEmptyValidation(
-                                  value, 'first name');
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'First Name',
-                              border: OutlineInputBorder(),
+                                  alignment: Alignment.bottomRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 8, right: 4),
+                                    child: Icon(Icons.add_a_photo),
+                                  )),
                             ),
-                          ),
-                          SizedBox(height: 10),
-                          TextFormField(
-                            controller: _lastNameController,
-                            validator: (value) {
-                              return checkNullEmptyValidation(
-                                  value, 'last name');
-                            },
-                            decoration: InputDecoration(
-                              labelText: 'Last Name',
-                              border: OutlineInputBorder(),
-                            ),
-                          ),
-                          SizedBox(height: 50),
-                          Container(
-                            width: size.width * 0.8,
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                                padding: MaterialStateProperty.all(
-                                  const EdgeInsets.symmetric(
-                                      vertical: 15, horizontal: 15),
-                                ),
-                                backgroundColor: MaterialStateProperty.all(
-                                    Color(0xFF89cc4f)),
+                            SizedBox(height: 30),
+                            TextFormField(
+                              controller: _firstNameController,
+                              validator: (value) {
+                                return checkNullEmptyValidation(
+                                    value, 'first name');
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'First Name',
+                                border: OutlineInputBorder(),
                               ),
-                              onPressed: () async {
-                                try {
-                                  if (_formKey.currentState!.validate()) {
-                                    loadingDialogBox(
-                                        context, 'Updating user details');
+                            ),
+                            SizedBox(height: 10),
+                            TextFormField(
+                              controller: _lastNameController,
+                              validator: (value) {
+                                return checkNullEmptyValidation(
+                                    value, 'last name');
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'Last Name',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            SizedBox(height: 50),
+                            Container(
+                              width: size.width * 0.8,
+                              child: ElevatedButton(
+                                style: ButtonStyle(
+                                  shape: MaterialStateProperty.all(
+                                    RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                  ),
+                                  padding: MaterialStateProperty.all(
+                                    const EdgeInsets.symmetric(
+                                        vertical: 15, horizontal: 15),
+                                  ),
+                                  backgroundColor: MaterialStateProperty.all(
+                                      Color(0xFF89cc4f)),
+                                ),
+                                onPressed: () async {
+                                  try {
+                                    if (_formKey.currentState!.validate()) {
+                                      loadingDialogBox(
+                                          context, 'Updating user details');
 
-                                    uploadFile(context, _selectedImagePath)
-                                        .then((url) {
-                                      if (url != null) {
-                                        setState(() {
-                                          imageUploading = false;
-                                          _selectedImagePath = '';
-                                        });
-                                        firebaseUser.updateFirebaseUser(
-                                            context, {
-                                          'image': url,
-                                          'name':
-                                              "${_firstNameController.text} ${_lastNameController.text}"
-                                        }).then((value) {
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                        });
-                                      }
+                                      uploadFile(context, _selectedImagePath)
+                                          .then((url) {
+                                        if (url != null) {
+                                          setState(() {
+                                            imageUploading = false;
+                                            _selectedImagePath = '';
+                                          });
+                                          firebaseUser.updateFirebaseUser(
+                                              context, {
+                                            'image': url,
+                                            'name':
+                                                "${_firstNameController.text} ${_lastNameController.text}"
+                                          }).then((value) {
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                          });
+                                        }
+                                      });
+                                    }
+                                  } catch (e) {
+                                    Navigator.pop(context);
+                                    customSnackBar(
+                                        context: context,
+                                        content: 'Something went wrong');
+                                  }
+                                },
+                                child: Text(
+                                  'Save',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: secondaryColor,
+                        ),
+                      );
+                    },
+                  ),
+                if (userData != null)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: _selectImage,
+                        child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.grey,
+                                width: 1.0,
+                              ),
+                              image: imageUploading == true &&
+                                      _selectedImagePath.isNotEmpty
+                                  ? DecorationImage(
+                                      image: FileImage(
+                                        File(_selectedImagePath),
+                                      ),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : userData!['image'].toString().isNotEmpty
+                                      ? DecorationImage(
+                                          image: NetworkImage(
+                                              userData!['image'].toString()))
+                                      : null,
+                            ),
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 8, right: 4),
+                              child: Icon(Icons.add_a_photo),
+                            )),
+                      ),
+                      SizedBox(height: 30),
+                      TextFormField(
+                        controller: _firstNameController,
+                        validator: (value) {
+                          return checkNullEmptyValidation(value, 'first name');
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'First Name',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      TextFormField(
+                        controller: _lastNameController,
+                        validator: (value) {
+                          return checkNullEmptyValidation(value, 'last name');
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Last Name',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      SizedBox(height: 50),
+                      Container(
+                        width: size.width * 0.8,
+                        child: ElevatedButton(
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                            padding: MaterialStateProperty.all(
+                              const EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 15),
+                            ),
+                            backgroundColor:
+                                MaterialStateProperty.all(Color(0xFF89cc4f)),
+                          ),
+                          onPressed: () async {
+                            try {
+                              if (_formKey.currentState!.validate()) {
+                                loadingDialogBox(
+                                    context, 'Updating user details');
+
+                                uploadFile(context, _selectedImagePath)
+                                    .then((url) {
+                                  if (url != null) {
+                                    setState(() {
+                                      imageUploading = false;
+                                      _selectedImagePath = '';
+                                    });
+                                    firebaseUser.updateFirebaseUser(context, {
+                                      'image': url,
+                                      'name':
+                                          "${_firstNameController.text} ${_lastNameController.text}"
+                                    }).then((value) {
+                                      Navigator.pop(context);
+                                      Navigator.pop(context);
                                     });
                                   }
-                                } catch (e) {
-                                  Navigator.pop(context);
-                                  customSnackBar(
-                                      context: context,
-                                      content: 'Something went wrong');
-                                }
-                              },
-                              child: Text(
-                                'Save',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
-                                ),
-                              ),
+                                });
+                              }
+                            } catch (e) {
+                              Navigator.pop(context);
+                              customSnackBar(
+                                  context: context,
+                                  content: 'Something went wrong');
+                            }
+                          },
+                          child: Text(
+                            'Save',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
                             ),
                           ),
-                        ],
-                      );
-                    }
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: secondaryColor,
+                        ),
                       ),
-                    );
-                  },
-                ),
+                    ],
+                  )
                 // Column(
                 //   crossAxisAlignment: CrossAxisAlignment.center,
                 //   children: [

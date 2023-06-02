@@ -97,70 +97,72 @@ class _MyWastePageState extends State<MyWastePage> {
               return const Text('Error');
             } else if (snapshot.hasData) {
               myWaste = snapshot.data!.docs;
-
-              return ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  DocumentSnapshot item = snapshot.data!.docs[index];
-                  return Card(
-                    elevation: 4,
-                    margin:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: ListTile(
-                      title: Text(
-                        item['waste_type'],
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.remove),
-                            onPressed: () async {
-                              int quantity = item['quantity'];
-                              if (quantity > 1) {
-                                quantity--;
+              if (snapshot.data!.docs.length > 0) {
+                return ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot item = snapshot.data!.docs[index];
+                    return Card(
+                      elevation: 4,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: ListTile(
+                        title: Text(
+                          item['waste_type'],
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.remove),
+                              onPressed: () async {
+                                int quantity = item['quantity'];
+                                if (quantity > 1) {
+                                  quantity--;
+                                  await authService.carts
+                                      .doc(item.id)
+                                      .update({'quantity': quantity});
+                                }
+                              },
+                            ),
+                            Text(
+                              '${item['quantity']}kg',
+                              style: const TextStyle(fontSize: 18),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.add),
+                              onPressed: () async {
+                                int quantity = item['quantity'];
+                                quantity++;
                                 await authService.carts
                                     .doc(item.id)
                                     .update({'quantity': quantity});
-                              }
-                            },
-                          ),
-                          Text(
-                            '${item['quantity']}kg',
-                            style: const TextStyle(fontSize: 18),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed: () async {
-                              int quantity = item['quantity'];
-                              quantity++;
-                              await authService.carts
-                                  .doc(item.id)
-                                  .update({'quantity': quantity});
-                            },
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () async {
-                              loadingDialogBox(context, 'deleting');
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete),
+                              onPressed: () async {
+                                loadingDialogBox(context, 'deleting');
 
-                              FirebaseFirestore.instance.runTransaction(
-                                  (Transaction myTransaction) async {
-                                await myTransaction.delete(
-                                    snapshot.data!.docs[index].reference);
-                              }).then((value) {
-                                Navigator.pop(context);
-                              });
-                            },
-                          ),
-                        ],
+                                FirebaseFirestore.instance.runTransaction(
+                                    (Transaction myTransaction) async {
+                                  await myTransaction.delete(
+                                      snapshot.data!.docs[index].reference);
+                                }).then((value) {
+                                  Navigator.pop(context);
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              );
+                    );
+                  },
+                );
+              }
+              return Center(child: Text("Your waste is empty.Good job!"));
             } else {
               return const Text('Empty data');
             }

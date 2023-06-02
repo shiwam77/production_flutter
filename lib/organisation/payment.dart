@@ -61,9 +61,10 @@ class PaymentGateWay extends StatelessWidget {
               onSuccess: (result) async {
                 loadingDialogBox(context, 'Updating Database');
 
-                authService.checkout
-                    .doc(item.id)
-                    .update({'status': 'Bought'}).then((value) {
+                authService.checkout.doc(item.id).update({
+                  'status': 'Bought',
+                  'payment': price.toString()
+                }).then((value) {
                   Navigator.pop(context);
                   Navigator.of(context).pushNamedAndRemoveUntil(
                       OrganisationHome.screenId, (route) => false);
