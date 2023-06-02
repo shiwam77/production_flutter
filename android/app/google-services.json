@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "209350866119",
+    "project_id": "recysell",
+    "storage_bucket": "recysell.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209350866119:android:ab42d2c7e5be087ac03ae2",
+        "android_client_info": {
+          "package_name": "com.example.production_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7tgh96xotToHIYAWsgPvTk2Wffg7PhNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

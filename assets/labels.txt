@@ -1,0 +1,5 @@
+compost
+metal
+paper
+plastic
+white-glass
