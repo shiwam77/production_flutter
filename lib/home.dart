@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,13 @@ import 'package:production_flutter/service/user_service.dart';
 import 'package:production_flutter/utils.dart';
 
 import 'Setlocation.dart';
+
+List<String> bannerUrlList = [
+  "https://firebasestorage.googleapis.com/v0/b/recysell.appspot.com/o/Metal%20Label.png?alt=media&token=93279a94-1bc7-437c-9835-9753a4a1bc88&_gl=1*oue1si*_ga*MTk5NTA0MDE5NC4xNjcyNDc2ODg5*_ga_CW55HF8NVT*MTY4NTg1MzM4My4xNy4xLjE2ODU4NTMzOTAuMC4wLjA.",
+  "https://firebasestorage.googleapis.com/v0/b/recysell.appspot.com/o/Glass%20Label.png?alt=media&token=4b3b8fa5-5a78-4aaa-820f-c2baca83e5f2&_gl=1*1rblrxa*_ga*MTk5NTA0MDE5NC4xNjcyNDc2ODg5*_ga_CW55HF8NVT*MTY4NTg1MzM4My4xNy4xLjE2ODU4NTM2MzcuMC4wLjA.",
+  "https://firebasestorage.googleapis.com/v0/b/recysell.appspot.com/o/Kitchen%20Waste%20Label.png?alt=media&token=2c9c39c4-6bd6-4602-8166-e5c880dd5bb5&_gl=1*1ct9odp*_ga*MTk5NTA0MDE5NC4xNjcyNDc2ODg5*_ga_CW55HF8NVT*MTY4NTg1MzM4My4xNy4xLjE2ODU4NTM2NzIuMC4wLjA.",
+  "https://firebasestorage.googleapis.com/v0/b/recysell.appspot.com/o/Plastic%20Label.png?alt=media&token=99793782-0337-46f9-bc0f-a223fc6b69e3&_gl=1*u0na5y*_ga*MTk5NTA0MDE5NC4xNjcyNDc2ODg5*_ga_CW55HF8NVT*MTY4NTg1MzM4My4xNy4xLjE2ODU4NTM3MDAuMC4wLjA."
+];
 
 class MyHome extends StatefulWidget {
   static const String screenId = 'home';
@@ -255,64 +264,27 @@ class _MyHomeState extends State<MyHome> {
 
             /////////////////Category////////////
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  CategoryTitle(
-                    text: "Category",
-                  ),
-                  Spacer(),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(Size(50, 23)),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                      padding: MaterialStateProperty.all(
-                        const EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-                      ),
-                      backgroundColor:
-                          MaterialStateProperty.all(Color(0xFF89cc4f)),
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      "See All",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10,
-                          color: Colors.black),
-                    ),
-                  ),
-                ],
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: CarouselSlider.builder(
+                itemCount: bannerUrlList.length,
+                options: CarouselOptions(
+                  autoPlay: true,
+                  viewportFraction: 1.0,
+                ),
+                itemBuilder: (context, index, realIdx) {
+                  return CachedNetworkImage(
+                    imageUrl: bannerUrlList[index],
+                  );
+                },
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
-            Container(
-              height: 60,
-              child: Row(
-                children: <Widget>[
-                  _buildCategoryProduct(
-                      image: "organic1.png", color: 0xFF89cc4f),
-                  _buildCategoryProduct(
-                      image: "plastic.png", color: 0xFFF38cdd),
-                  _buildCategoryProduct(
-                      image: "electronic.png", color: 0xFFd2691e),
-                  _buildCategoryProduct(image: "paper.png", color: 0xFF74acf7),
-                  _buildCategoryProduct(image: "scrap.png", color: 0xFF33dcfd),
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
+
             //////////////Recommended/////////////
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.0),
               child: Row(
                 children: <Widget>[
                   RecommendedTitle(
@@ -343,10 +315,10 @@ class _MyHomeState extends State<MyHome> {
                 ],
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 5,
             ),
-            RecommendsWaste(),
+            const RecommendsWaste(),
           ],
         ),
       ),
@@ -358,7 +330,7 @@ class _MyHomeState extends State<MyHome> {
       color: Colors.green[700],
       width: double.infinity,
       height: 200,
-      padding: EdgeInsets.only(top: 60.0),
+      padding: const EdgeInsets.only(top: 60.0),
       child: FutureBuilder(
         future: initUserDetail,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -375,7 +347,7 @@ class _MyHomeState extends State<MyHome> {
             return Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(bottom: 10),
+                  margin: const EdgeInsets.only(bottom: 10),
                   height: 70,
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -388,7 +360,7 @@ class _MyHomeState extends State<MyHome> {
                 ),
                 Text(
                   data['name'].toString(),
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: const TextStyle(color: Colors.white, fontSize: 20),
                 ),
                 Text(
                   data['email'].toString(),
@@ -449,7 +421,7 @@ class _MyHomeState extends State<MyHome> {
                     });
                   });
                 },
-                child: locationTextWidget(location: 'Update Location'));
+                child: const locationTextWidget(location: 'Update Location'));
           } else {
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -468,20 +440,20 @@ class _MyHomeState extends State<MyHome> {
                               )),
                     );
                   },
-                  child: Text("View on map"),
+                  child: const Text("View on map"),
                 ),
               ],
             );
           }
         }
-        return locationTextWidget(location: 'Fetching location');
+        return const locationTextWidget(location: 'Fetching location');
       },
     );
   }
 
   Widget MyDrawerList() {
     return Container(
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         top: 15,
       ),
       child: Column(
@@ -516,7 +488,7 @@ class _MyHomeState extends State<MyHome> {
           navigateToPage(section);
         },
         child: Padding(
-          padding: EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(15.0),
           child: Row(
             children: [
               Expanded(
@@ -526,7 +498,7 @@ class _MyHomeState extends State<MyHome> {
                 flex: 3,
                 child: Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 16,
                   ),
@@ -615,7 +587,7 @@ class RecommendedTitle extends StatelessWidget {
       height: 24,
       child: Stack(
         children: <Widget>[
-          Text(
+          const Text(
             "Recomended",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
@@ -624,7 +596,7 @@ class RecommendedTitle extends StatelessWidget {
             left: 0,
             right: 0,
             child: Container(
-              margin: EdgeInsets.only(right: 20.0 / 4),
+              margin: const EdgeInsets.only(right: 20.0 / 4),
               height: 7,
               // color: Color(0xFF89cc4f).withOpacity(0.2),
             ),

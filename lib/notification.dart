@@ -61,7 +61,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   itemBuilder: (context, index) {
                     DocumentSnapshot item = snapshot.data!.docs[index];
                     var waste = item['checkout_waste'];
-
+                    print(item['payment']);
                     return ExpansionTile(
                       collapsedTextColor: Color(0xFF89cc4f),
                       collapsedIconColor: Color(0xFF89cc4f),
@@ -93,7 +93,7 @@ class _NotificationPageState extends State<NotificationPage> {
                               border: Border.all(color: Colors.grey),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            margin: EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 8),
                             child: ListTile(
                               title: Row(
@@ -150,18 +150,4 @@ class _NotificationPageState extends State<NotificationPage> {
       ),
     );
   }
-}
-
-class HistoryItem {
-  String title;
-  String message;
-  DateTime time;
-  String status;
-
-  HistoryItem({
-    required this.title,
-    required this.message,
-    required this.time,
-    this.status = 'Acknowledged',
-  });
 }

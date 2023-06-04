@@ -60,6 +60,8 @@ dependencies:
   search_page: ^2.3.0
   flutter_google_places: ^0.3.0
   esewa_flutter: ^1.1.2
+  carousel_slider: ^4.2.1
+  cached_network_image: ^3.2.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

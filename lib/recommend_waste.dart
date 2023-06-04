@@ -110,7 +110,7 @@ class RecommendedWasteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Container(
-      margin: EdgeInsets.only(
+      margin: const EdgeInsets.only(
         left: 20,
         bottom: 50,
       ),
@@ -125,18 +125,18 @@ class RecommendedWasteCard extends StatelessWidget {
           GestureDetector(
             onTap: press,
             child: Container(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(10),
                   bottomRight: Radius.circular(10),
                 ),
                 boxShadow: [
                   BoxShadow(
-                    offset: Offset(0, 10),
+                    offset: const Offset(0, 10),
                     blurRadius: 50,
-                    color: Color(0xFF89cc4f).withOpacity(0.23),
+                    color: const Color(0xFF89cc4f).withOpacity(0.23),
                   ),
                 ],
               ),
@@ -151,16 +151,9 @@ class RecommendedWasteCard extends StatelessWidget {
                       TextSpan(
                           text: "$product\n".toUpperCase(),
                           style: TextStyle(
-                            color: Color(0xFF89cc4f).withOpacity(0.5),
+                            color: const Color(0xFF89cc4f).withOpacity(0.5),
                           )),
                     ]),
-                  ),
-                  Spacer(),
-                  Text(
-                    '\$$price',
-                    style: Theme.of(context).textTheme.button?.copyWith(
-                          color: const Color(0xFF89cc4f),
-                        ),
                   ),
                 ],
               ),
@@ -168,13 +161,13 @@ class RecommendedWasteCard extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: onPressButton,
-            child: Text(buttonTitle),
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
               backgroundColor: const Color(0xFF89cc4f),
             ),
+            child: Text(buttonTitle),
           ),
         ],
       ),

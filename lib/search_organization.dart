@@ -31,7 +31,6 @@ class Search {
           ),
           filter: (product) => [
                 product.name,
-                product.address,
               ],
           builder: (product) {
             return InkWell(
@@ -96,7 +95,9 @@ class Search {
                         ),
                       ],
                     ),
-                    trailing: Image.network(product.image.toString()),
+                    trailing: product.image.toString().isNotEmpty
+                        ? Image.network(product.image.toString())
+                        : null,
                   ),
                 ),
               ),
@@ -230,7 +231,10 @@ class _ProductListingState extends State<ProductListing> {
                                         ),
                                       ],
                                     ),
-                                    trailing: Image.network(item['image']),
+                                    trailing:
+                                        item['image'].toString().isNotEmpty
+                                            ? Image.network(item['image'])
+                                            : null,
                                   ),
                                 ),
                               ),

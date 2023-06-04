@@ -223,7 +223,6 @@ class _OrganisationHomeState extends State<OrganisationHome> {
       child: StreamBuilder(
         stream: authService.checkout
             .where('organisation_id', isEqualTo: authService.currentUser!.uid)
-            .where('status', isEqualTo: 'Reject')
             .where("status", isNotEqualTo: 'Bought')
             .limit(10)
             .snapshots(),
