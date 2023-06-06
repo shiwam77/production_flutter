@@ -8,6 +8,7 @@ import 'package:production_flutter/utils.dart';
 
 import 'color.dart';
 import 'constant/validators.dart';
+import 'home.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -322,7 +323,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                           "${_firstNameController.text} ${_lastNameController.text}"
                                     }).then((value) {
                                       Navigator.pop(context);
+                                      Navigator.pushNamedAndRemoveUntil(context,
+                                          MyHome.screenId, (route) => false);
                                       Navigator.pop(context);
+                                      Navigator.pushNamed(
+                                          context, MyHome.screenId);
                                     });
                                   }
                                 });

@@ -51,6 +51,7 @@ class _MyAppState extends State<MyApp> {
         'home': (context) => const MyHome(),
         'location_screen': (context) => const LocationScreen(),
         'splash_screen': (context) => const SplashScreen(),
+        'splash_screen': (context) => const SplashScreen(),
       },
     );
   }

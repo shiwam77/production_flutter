@@ -7,6 +7,7 @@ import 'package:production_flutter/utils.dart';
 import '../../color.dart';
 import '../../constant/validators.dart';
 import '../service/organisation_auth.dart';
+import 'home.dart';
 
 class OrganisationProfilePage extends StatefulWidget {
   @override
@@ -465,8 +466,14 @@ class _OrganisationProfilePageState extends State<OrganisationProfilePage> {
                                         }
                                       }).then((value) {
                                         Navigator.pop(context);
-                                        Navigator.pop(context);
+                                        Navigator.of(context)
+                                            .pushNamedAndRemoveUntil(
+                                                OrganisationHome.screenId,
+                                                (route) => false);
                                       });
+                                      Navigator.pop(context);
+                                      Navigator.pushNamed(
+                                          context, OrganisationHome.screenId);
                                     }
                                   });
                                 } else {
